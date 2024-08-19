@@ -1,0 +1,50 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: [servicebus-name].servicebus.windows.net:9093
+          autoCreateTopics: false
+          configuration:
+            metadata.max.age.ms: 180000 #The period of time in milliseconds after which we force a refresh of metadata even if we haven’t seen any partition leadership changes to proactively discover any new brokers or partitions, Default 300000(5min)
+            connections.max.idle.ms: 180000
+            security.protocol: SASL_SSL
+            sasl.mechanism: PLAIN
+            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="Endpoint=sb://..;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...";
+          consumerProperties:
+            heartbeat.interval.ms: 3000
+            session.timeout.ms: 30000
+            max.poll.interval.ms: 300000
+          producerProperties:
+            max.request.size: 1000000
+            retries: 3
+            request.timeout.ms: 30000
+            metadata.max.idle.ms: 180000
+            linger.ms: 50 #Rather than immediately sending out a record, the producer will wait for up to the given delay to allow other records to be sent so that the sends can be batched together. This can improve throughput, Default 0
+            delivery.timeout.ms: 90150 #An upper bound on the time to report success or failure after a call to send() returns. This limits the total time that a record will be delayed prior to sending, Default 120000
+            compression.type: none
+      function:
+        definition: consume;supply
+      bindings:
+        consume-in-0:
+          destination: aoai
+          group: $Default
+          consumer:
+            maxAttempts: 1
+        supply-out-0:
+          destination: aoai
+  #          producer:
+  #            partitionKeyExpression: payload.type
+  application:
+    name: openai-token-meter
+  gson:
+    pretty-printing: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: aoai
+  datasource:
+    url: jdbc:postgresql://...:5432/aoai
+    username: aoai
+    password: ...
