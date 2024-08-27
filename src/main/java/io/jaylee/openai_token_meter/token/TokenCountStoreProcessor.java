@@ -37,4 +37,12 @@ public class TokenCountStoreProcessor {
 
                 }
     }
+
+    // Run Every Mondy
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void gcOldTokenCount() {
+        TokenCountStore.gcTokenCountStore();
+    }
+
 }
+

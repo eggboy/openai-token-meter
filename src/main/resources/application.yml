@@ -3,14 +3,14 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: [servicebus-name].servicebus.windows.net:9093
+          brokers: ${EVENTHUB_URL}
           autoCreateTopics: false
           configuration:
             metadata.max.age.ms: 180000 #The period of time in milliseconds after which we force a refresh of metadata even if we haven’t seen any partition leadership changes to proactively discover any new brokers or partitions, Default 300000(5min)
             connections.max.idle.ms: 180000
             security.protocol: SASL_SSL
             sasl.mechanism: PLAIN
-            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="Endpoint=sb://..;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...";
+            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_SASL_PASSWORD}";
           consumerProperties:
             heartbeat.interval.ms: 3000
             session.timeout.ms: 30000
@@ -33,8 +33,6 @@ spring:
             maxAttempts: 1
         supply-out-0:
           destination: aoai
-  #          producer:
-  #            partitionKeyExpression: payload.type
   application:
     name: openai-token-meter
   gson:
@@ -42,9 +40,10 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.SQLServer2016Dialect
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: aoai
   datasource:
-    url: jdbc:postgresql://...:5432/aoai
-    username: aoai
-    password: ...
+    url: ${JDBC_URL}
+    username: ${JDBC_USER}
+    password: ${JDBC_PASSWORD}

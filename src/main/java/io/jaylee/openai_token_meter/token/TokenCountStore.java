@@ -80,6 +80,18 @@ public class TokenCountStore {
     public static void printTokenUsageMap() {
         tokenUsageMap.forEach((key, value) -> log.info(key + " : " + value));
     }
+
+    public static void gcTokenCountStore() {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        tokenUsageMap.entrySet().removeIf(entry -> {
+            LocalDateTime eventTime = LocalDateTime.parse(entry.getKey().getEventTime());
+            boolean isBeforeOneDayAgo = eventTime.isBefore(oneDayAgo);
+            if (isBeforeOneDayAgo) {
+                log.debug("Removing token count for key: {} with event time: {}", entry.getKey(), eventTime);
+            }
+            return isBeforeOneDayAgo;
+        });
+    }
 }
 
 @Data

@@ -1,4 +1,4 @@
-package io.jaylee.openai_token_meter.token.store.postgres;
+package io.jaylee.openai_token_meter.token.store.sqlserver;
 
 import io.jaylee.openai_token_meter.token.domain.TokenCountStoreDTO;
 import io.jaylee.openai_token_meter.token.store.TokenStoreWriter;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class PostgresCountWriter implements TokenStoreWriter {
+public class SQLServerCountWriter implements TokenStoreWriter {
 
     @Autowired
     private TokenUsagePostgresRepository tokenUsagePostgresRepository;

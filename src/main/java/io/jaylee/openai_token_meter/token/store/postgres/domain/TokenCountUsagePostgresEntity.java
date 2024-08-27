@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table(name = "token_count_usage")
-public class TokenCountUsageEntity {
+public class TokenCountUsagePostgresEntity {
     private static final String SEQUENCE = "token_count_usage_id_seq";
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE)
@@ -31,7 +31,7 @@ public class TokenCountUsageEntity {
     private int completionTokens;
     private int totalTokens;
 
-    public TokenCountUsageEntity(String productId, String endpoint, String model, LocalDateTime eventTime, int promptTokens, int completionTokens, int totalTokens) {
+    public TokenCountUsagePostgresEntity(String productId, String endpoint, String model, LocalDateTime eventTime, int promptTokens, int completionTokens, int totalTokens) {
         this.productId = productId;
         this.endpoint = endpoint;
         this.model = model;

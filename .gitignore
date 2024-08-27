@@ -1,3 +1,4 @@
+k8s.yml
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
