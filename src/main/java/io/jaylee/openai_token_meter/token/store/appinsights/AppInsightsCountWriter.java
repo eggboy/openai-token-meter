@@ -8,6 +8,5 @@ import org.springframework.stereotype.Component;
 public class AppInsightsCountWriter implements TokenStoreWriter {
     @Override
     public void writeTokenMetrics(TokenCountStoreDTO tokenCountStoreDTO) {
-
     }
 }

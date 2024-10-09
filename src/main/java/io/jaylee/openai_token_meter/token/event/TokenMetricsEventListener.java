@@ -13,7 +13,7 @@ public class TokenMetricsEventListener {
     @EventListener
     @Async
     public void handleTokenMetricsEvent(TokenMetricsEvent tokenMetricsEvent) {
-        log.info("handleTokenMetricsEvent : {}", tokenMetricsEvent.toString());
+        log.debug("handleTokenMetricsEvent : {}", tokenMetricsEvent.toString());
 
         TokenCountStore.addProductId(tokenMetricsEvent.getProductId());
         TokenCountStore.addEndpoint(tokenMetricsEvent.getEndpoint());

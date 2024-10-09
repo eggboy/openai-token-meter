@@ -1,7 +1,6 @@
 package io.jaylee.openai_token_meter.service;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +44,11 @@ public class EventHubReceiver {
                 } else {
                     nonStreamingProcessor.process(payload);
                 }
-            } catch (JsonParseException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                            /*
+            Because of Streaming mode and the limitation of log-eventhub on API Management(200k payload), com.fasterxml.jackson.core.io.JsonEOFException: Unexpected end-of-input in character escape sequence could happen. This will be handled by the catch block to skip it.
+             */
+            } catch (Exception ex) {
+                log.error("Parsing JSON failed most likely because the payload is streaming. {} ", ex.getMessage());
             }
         };
     }

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai-token-meter
+  labels:
+    app: openai-token-meter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openai-token-meter
+  template:
+    metadata:
+      name: openai-token-meter
+      labels:
+        app: openai-token-meter
+    spec:
+      containers:
+        - name: openai-token-meter
+          image: eggboy/openai-token-meter:0.0.12
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "2048Mi"
+              cpu: "1000m"
+            limits:
+              memory: "2048Mi"
+              cpu: "2000m"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: JDBC_URL
+#              value:
+            - name: JDBC_USER
+#              value:
+            - name: JDBC_PASSWORD
+#              value:
+            - name: EVENTHUB_URL
+#              value:
+            - name: KAFKA_SASL_PASSWORD
+#              value:
+      restartPolicy: Always

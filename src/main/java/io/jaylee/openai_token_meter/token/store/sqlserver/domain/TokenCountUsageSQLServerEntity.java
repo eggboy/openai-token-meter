@@ -13,11 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "token_count_usage")
 public class TokenCountUsageSQLServerEntity {
-    private static final String SEQUENCE = "token_count_usage_id_seq";
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE)
-    @SequenceGenerator(name = SEQUENCE, sequenceName = SEQUENCE, allocationSize = 50)
-    private Long id;
+    private String id;
     @NotNull
     private String productId;
     @NotNull
@@ -31,7 +28,8 @@ public class TokenCountUsageSQLServerEntity {
     private int completionTokens;
     private int totalTokens;
 
-    public TokenCountUsageSQLServerEntity(String productId, String endpoint, String model, LocalDateTime eventTime, int promptTokens, int completionTokens, int totalTokens) {
+    public TokenCountUsageSQLServerEntity(String id, String productId, String endpoint, String model, LocalDateTime eventTime, int promptTokens, int completionTokens, int totalTokens) {
+        this.id = id;
         this.productId = productId;
         this.endpoint = endpoint;
         this.model = model;

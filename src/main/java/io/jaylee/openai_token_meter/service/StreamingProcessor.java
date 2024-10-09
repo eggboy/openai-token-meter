@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 @Slf4j
@@ -18,8 +17,9 @@ public class StreamingProcessor {
     private final JsonFactory jsonFactory;
 
     public void process(String payload) {
-        StringBuilder contentString = new StringBuilder();
         try {
+            StringBuilder contentString = new StringBuilder();
+
             JsonParser jsonParser = jsonFactory.createParser(new StringReader(payload));
             while (!jsonParser.isClosed()) {
                 JsonToken jsonToken = jsonParser.nextToken();
@@ -30,10 +30,9 @@ public class StreamingProcessor {
                     contentString.append(content);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception ex) {
+            log.error("Parsing JSON Exception : {}", ex.getMessage());
         }
-        log.info("StreamingProcessor : {}", contentString.toString());
     }
 
 }

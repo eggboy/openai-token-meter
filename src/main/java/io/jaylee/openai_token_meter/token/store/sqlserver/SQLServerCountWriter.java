@@ -2,27 +2,30 @@ package io.jaylee.openai_token_meter.token.store.sqlserver;
 
 import io.jaylee.openai_token_meter.token.domain.TokenCountStoreDTO;
 import io.jaylee.openai_token_meter.token.store.TokenStoreWriter;
-import io.jaylee.openai_token_meter.token.store.postgres.domain.TokenCountUsagePostgresEntity;
-import io.jaylee.openai_token_meter.token.store.postgres.repository.TokenUsagePostgresRepository;
+import io.jaylee.openai_token_meter.token.store.sqlserver.domain.TokenCountUsageSQLServerEntity;
+import io.jaylee.openai_token_meter.token.store.sqlserver.repository.TokenUsageSQLServerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
 public class SQLServerCountWriter implements TokenStoreWriter {
 
     @Autowired
-    private TokenUsagePostgresRepository tokenUsagePostgresRepository;
+    private TokenUsageSQLServerRepository tokenUsageSQLServerRepository;
 
     @Override
     public void writeTokenMetrics(TokenCountStoreDTO tokenCountStoreDTO) {
-        log.info("Writing token count to Postgres DB: {}", tokenCountStoreDTO);
-        tokenUsagePostgresRepository.save(convertToEntity(tokenCountStoreDTO));
+        log.info("Writing token count to SQL Server DB: {}", tokenCountStoreDTO);
+        tokenUsageSQLServerRepository.save(convertToEntity(tokenCountStoreDTO));
     }
 
-    // Create a method to convert to TokenCountUsageEntity from TokenCountStoreDTO to store into DB. TokenCountUsageEntity doesn't user Builder pattern.
-    private TokenCountUsagePostgresEntity convertToEntity(TokenCountStoreDTO tokenCountStoreDTO) {
-        return new TokenCountUsagePostgresEntity(tokenCountStoreDTO.getProductId(), tokenCountStoreDTO.getEndpoint(), tokenCountStoreDTO.getModel(), tokenCountStoreDTO.getEventTime(), tokenCountStoreDTO.getPromptTokens(), tokenCountStoreDTO.getCompletionTokens(), tokenCountStoreDTO.getTotalTokens());
+    private TokenCountUsageSQLServerEntity convertToEntity(TokenCountStoreDTO tokenCountStoreDTO) {
+        UUID uuid = UUID.randomUUID();
+
+        return new TokenCountUsageSQLServerEntity(uuid.toString(), tokenCountStoreDTO.getProductId(), tokenCountStoreDTO.getEndpoint(), tokenCountStoreDTO.getModel(), tokenCountStoreDTO.getEventTime(), tokenCountStoreDTO.getPromptTokens(), tokenCountStoreDTO.getCompletionTokens(), tokenCountStoreDTO.getTotalTokens());
     }
 }

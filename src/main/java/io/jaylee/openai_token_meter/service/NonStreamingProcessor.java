@@ -13,6 +13,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -51,7 +53,6 @@ public class NonStreamingProcessor {
                                                                 .completionTokens(completionTokens)
                                                                 .totalTokens(totalTokens)
                                                                 .build());
-
         if (PROMPT_LOGGING_ENABLED) {
             String requestBody = jsonObject.get("RequestBody").getAsString();
             String requestId = jsonObject.get("RequestId").getAsString();
@@ -63,7 +64,12 @@ public class NonStreamingProcessor {
         try {
             URI uri = new URI(urlString);
             String hostname = uri.getHost();
-            String modelName = uri.getPath().split("/")[3];
+            String[] tokens = Arrays.stream(uri.getPath().split("/"))
+                    .filter(Objects::nonNull)
+                    .filter(s -> !s.isEmpty())
+                    .toArray(String[]::new);
+            String modelName = tokens[Arrays.asList(tokens).indexOf("deployments") + 1];
+            
             return new String[]{hostname, modelName};
         } catch (URISyntaxException e) {
             log.error("Invalid URI syntax: {}", urlString, e);
